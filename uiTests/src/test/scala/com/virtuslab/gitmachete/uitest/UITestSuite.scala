@@ -1,7 +1,7 @@
 package com.virtuslab.gitmachete.uitest
 
 import com.virtuslab.gitmachete.testcommon.BaseGitRepositoryBackedIntegrationTestSuite
-import com.virtuslab.gitmachete.testcommon.BaseGitRepositoryBackedIntegrationTestSuite.SETUP_WITH_SINGLE_REMOTE
+import com.virtuslab.gitmachete.testcommon.BaseGitRepositoryBackedIntegrationTestSuite._
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.junit._
@@ -82,7 +82,7 @@ object UITestSuite
 }
 
 @RunWith(classOf[JUnit4])
-class UITestSuite extends BaseGitRepositoryBackedIntegrationTestSuite(SETUP_WITH_SINGLE_REMOTE) {
+class UITestSuite extends BaseGitRepositoryBackedIntegrationTestSuite(SETUP_WITH_MULTIPLE_REMOTES) {
 
   import UITestSuite._
 
@@ -138,6 +138,25 @@ class UITestSuite extends BaseGitRepositoryBackedIntegrationTestSuite(SETUP_WITH
     branchAndCommitRowsCount = intelliJ.project.refreshModelAndGetRowCount()
     // 4 branch rows (`call-ws` is also no longer there) + 3 commit rows
     Assert.assertEquals(7, branchAndCommitRowsCount)
+  }
+
+  @Test def demo(): Unit = {
+    intelliJ.project.openGitMacheteTab()
+    intelliJ.project.refreshModelAndGetManagedBranches()
+    Thread.sleep(3000)
+
+    intelliJ.project.toggleListingCommits()
+    intelliJ.project.refreshModelAndGetRowCount()
+    Thread.sleep(3000)
+
+    intelliJ.project.checkoutBranch("develop")
+    intelliJ.project.refreshModelAndGetRowCount()
+    Thread.sleep(3000)
+
+    intelliJ.project.slideOutBranch("allow-ownership-link")
+    Thread.sleep(3000)
+    intelliJ.project.acceptBranchDeletionOnSlideOut()
+    Thread.sleep(3000)
   }
 
   @Test def discoverBranchLayout(): Unit = {
